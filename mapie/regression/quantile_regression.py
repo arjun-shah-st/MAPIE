@@ -341,6 +341,8 @@ class MapieQuantileRegressor(MapieRegressor):
             return "split"
         if cv in ("split", "prefit"):
             return cv
+        elif isinstance(cv, int): 
+            return cv
         else:
             raise ValueError(
                 "Invalid cv method, only valid method is ``split``."
@@ -546,10 +548,11 @@ class MapieQuantileRegressor(MapieRegressor):
         MapieQuantileRegressor
              The model itself.
         """
-        self.cv = self._check_cv(cast(str, self.cv))
+        self.cv = self._check_cv(self.cv)
 
         # Initialization
         self.estimators_: List[RegressorMixin] = []
+            
         if self.cv == "prefit":
             estimator = cast(List, self.estimator)
             alpha = self._check_alpha(self.alpha)
